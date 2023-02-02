@@ -9,18 +9,26 @@ import '../sevices/auth_services.dart';
 AuthServices _authServices = AuthServices();
 FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 DateServices _dateServices = DateServices();
+TextEditingController _timeFrom = TextEditingController();
+TextEditingController _timeTo = TextEditingController();
 
-class VolunteerList extends StatelessWidget {
+class VolunteerList extends StatefulWidget {
   final String magasin;
   final String date;
   const VolunteerList({Key? key,required this.magasin,required this.date}) : super(key: key);
+
+  @override
+  State<VolunteerList> createState() => _VolunteerListState();
+}
+
+class _VolunteerListState extends State<VolunteerList> {
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('${magasin=="AzizaH"? "Aziza" : magasin}'),
+          title: Text('${widget.magasin=="AzizaH"? "Aziza" : widget.magasin}'),
           centerTitle: true,
         ),
         body: Padding(
@@ -30,7 +38,7 @@ class VolunteerList extends StatelessWidget {
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                     stream: _dateServices
-                        .getListVolunteerData(date.toString(),magasin),
+                        .getListVolunteerData(widget.date.toString(),widget.magasin),
                   builder: (context, snapshot) {
                     if(snapshot.hasData){
                       return ListView.separated(
@@ -54,7 +62,7 @@ class VolunteerList extends StatelessWidget {
                               child: ListTile(
                                 leading: const Icon(Icons.account_circle, size: 50,color: Colors.black,),
                                 title: Text('${document["name"]}'),
-                                subtitle: Text('Subtitle'),
+                                subtitle: Text('${document["timeFrom"]} To ${document["timeTo"]}'),
                                 trailing: FutureBuilder<DocumentSnapshot>(
                                   future: _authServices.getUserData(_firebaseAuth.currentUser!.uid),
                                   builder: (context, snapshot) {
@@ -62,7 +70,7 @@ class VolunteerList extends StatelessWidget {
                                       if(document["name"] == snapshot.data!["name"]){
                                         return IconButton(
                                           onPressed: (){
-                                            _dateServices.deleteVolunteerFromMagasin(date.toString(),magasin,document["name"]);
+                                            _dateServices.deleteVolunteerFromMagasin(widget.date.toString(),widget.magasin,document["name"]);
                                             print('done');
                                           },
                                             icon: Icon(Icons.cancel_outlined),
@@ -112,7 +120,8 @@ class VolunteerList extends StatelessWidget {
                           ),
                         ),
                         onPressed: (){
-                          _dateServices.addVolunteerToMagasin(date, magasin, snapshot.data!["name"]);
+                         // _dateServices.addVolunteerToMagasin(widget.date, widget.magasin, snapshot.data!["name"]);
+                          _dialog(snapshot.data!["name"]);
                         },
                       );
                     }else{
@@ -127,4 +136,53 @@ class VolunteerList extends StatelessWidget {
       ),
     );
   }
+
+  _dialog(String name) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Center(
+          child: AlertDialog(
+            title: const Text(
+              'The time you\'ll be availble at?',
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 18.0,
+              ),
+            ),
+            actions: [
+              Padding(
+                padding: const EdgeInsetsDirectional.only(bottom: 10.0,start: 10.0,end: 10.0),
+                child: TextFormField(
+                  controller: _timeFrom,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    labelText: 'From',
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsetsDirectional.only(bottom: 10.0,start: 10.0,end: 10.0),
+                child: TextFormField(
+                  controller: _timeTo,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    labelText: 'To',
+                  ),
+                ),
+              ),
+              TextButton(
+                child: const Text('Ok'),
+                onPressed: () {
+                  _dateServices.addVolunteerToMagasin(widget.date, widget.magasin, name,_timeFrom.text.trim(),_timeTo.text.trim());
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
+

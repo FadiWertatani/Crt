@@ -29,13 +29,13 @@ class DateServices {
         .set({"name":name});
   }
 
-  Future addVolunteerToMagasin(String date, String magasin, String name) async {
+  Future addVolunteerToMagasin(String date, String magasin, String name, String timeF, String timeT) async {
     await _firebaseFirestore
         .collection('date')
         .doc(date)
         .collection(magasin)
         .doc(name)
-        .set({"name":name});
+        .set({"name":name,"timeFrom":timeF,"timeTo":timeT});
   }
 
   Future deleteVolunteerFromMagasin(String date, String magasin, String name) async {
