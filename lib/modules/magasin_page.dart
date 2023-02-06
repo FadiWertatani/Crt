@@ -93,39 +93,6 @@ class MagasinScreen extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  _dateServices.addMagasinToDate(date.toString(), 'Aziza', 'Stand');
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => VolunteerList(magasin: 'Aziza',date: date.toString()),
-                    ),
-                  );
-                },
-                child: Container(
-                  margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: const [
-                        BoxShadow(
-                            color: Colors.black12,
-                            offset: Offset(0, 2),
-                            blurRadius: 6.0)
-                      ],
-                  ),
-                  child: const ListTile(
-                    leading: Image(
-                      image: AssetImage('assets/aziza.png'),
-                      width: 50,
-                    ),
-                    title: Text('Aziza'),
-                    subtitle: Text('Erriadh'),
-                    trailing: Icon(Icons.arrow_forward),
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {
                   _dateServices.addMagasinToDate(date.toString(), 'AzizaH', 'Stand');
                   Navigator.push(
                     context,
@@ -153,6 +120,39 @@ class MagasinScreen extends StatelessWidget {
                     ),
                     title: Text('Aziza'),
                     subtitle: Text('Hammam Chatt'),
+                    trailing: Icon(Icons.arrow_forward),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  _dateServices.addMagasinToDate(date.toString(), 'Stand', 'Stand');
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => VolunteerList(magasin: 'AzizaH',date: date.toString()),
+                    ),
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: const [
+                      BoxShadow(
+                          color: Colors.black12,
+                          offset: Offset(0, 2),
+                          blurRadius: 6.0)
+                    ],
+                  ),
+                  child: const ListTile(
+                    leading: Image(
+                      image: AssetImage('assets/crt.png'),
+                      width: 50,
+                    ),
+                    title: Text('porte à porte'),
+                    subtitle: Text('All'),
                     trailing: Icon(Icons.arrow_forward),
                   ),
                 ),

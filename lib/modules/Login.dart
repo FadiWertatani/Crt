@@ -48,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: TextFormField(
                     controller: _passwordController,
                     keyboardType: TextInputType.emailAddress,
+                    obscureText: true,
                     decoration: const InputDecoration(
                       labelText: 'Password',
                     ),
