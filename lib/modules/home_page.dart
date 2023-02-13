@@ -92,25 +92,27 @@ class HomeScreen extends StatelessWidget {
           ),
 
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: TableCalendar(
-            firstDay: DateTime.utc(2023, 1, 1),
-            lastDay: DateTime.utc(2023, 3, 18),
-            focusedDay: DateTime.now(),
-            onDaySelected: (date, events) {
-              DateModel dateM = DateModel(
-                date: date.toString(),
-              );
-              _dateServices.addDateToCollection(dateM, date.toString());
-              // Navigate to another screen here
-              Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => MagasinScreen(date: date,),
-                ),
-              );
-            },
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: TableCalendar(
+              firstDay: DateTime.utc(2023, 1, 1),
+              lastDay: DateTime.utc(2023, 3, 18),
+              focusedDay: DateTime.now(),
+              onDaySelected: (date, events) {
+                DateModel dateM = DateModel(
+                  date: date.toString(),
+                );
+                _dateServices.addDateToCollection(dateM, date.toString());
+                // Navigate to another screen here
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => MagasinScreen(date: date,),
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),

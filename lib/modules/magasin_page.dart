@@ -126,11 +126,11 @@ class MagasinScreen extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  _dateServices.addMagasinToDate(date.toString(), 'Stand', 'Stand');
+                  _dateServices.addMagasinToDate(date.toString(), 'Porte à porte', 'Stand');
                   Navigator.push(
                     context,
                     CupertinoPageRoute(
-                      builder: (context) => VolunteerList(magasin: 'AzizaH',date: date.toString()),
+                      builder: (context) => VolunteerList(magasin: 'Porte à porte',date: date.toString()),
                     ),
                   );
                 },

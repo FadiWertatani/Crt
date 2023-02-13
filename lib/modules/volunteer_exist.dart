@@ -23,6 +23,8 @@ class VolunteerList extends StatefulWidget {
 
 class _VolunteerListState extends State<VolunteerList> {
 
+  var _dialogKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -61,7 +63,11 @@ class _VolunteerListState extends State<VolunteerList> {
                               ),
                               child: ListTile(
                                 leading: const Icon(Icons.account_circle, size: 50,color: Colors.black,),
-                                title: Text('${document["name"]}'),
+                                title: Text(
+                                    '${document["name"]}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                                 subtitle: Text('${document["timeFrom"]} To ${document["timeTo"]}'),
                                 trailing: FutureBuilder<DocumentSnapshot>(
                                   future: _authServices.getUserData(_firebaseAuth.currentUser!.uid),
@@ -71,7 +77,6 @@ class _VolunteerListState extends State<VolunteerList> {
                                         return IconButton(
                                           onPressed: (){
                                             _dateServices.deleteVolunteerFromMagasin(widget.date.toString(),widget.magasin,document["name"]);
-                                            print('done');
                                           },
                                             icon: Icon(Icons.cancel_outlined),
                                         );
@@ -151,32 +156,55 @@ class _VolunteerListState extends State<VolunteerList> {
               ),
             ),
             actions: [
-              Padding(
-                padding: const EdgeInsetsDirectional.only(bottom: 10.0,start: 10.0,end: 10.0),
-                child: TextFormField(
-                  controller: _timeFrom,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'From',
-                  ),
+              Form(
+                key: _dialogKey,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(bottom: 10.0,start: 10.0,end: 10.0),
+                      child: TextFormField(
+                        controller: _timeFrom,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: const InputDecoration(
+                          labelText: 'From',
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'From must not be empty';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(bottom: 10.0,start: 10.0,end: 10.0),
+                      child: TextFormField(
+                        controller: _timeTo,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: const InputDecoration(
+                          labelText: 'To',
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'To must not be empty';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    TextButton(
+                      child: const Text('Ok'),
+                      onPressed: () {
+                        if(_dialogKey.currentState!.validate()){
+                          _dateServices.addVolunteerToMagasin(widget.date, widget.magasin, name,_timeFrom.text.trim(),_timeTo.text.trim());
+                          Navigator.pop(context);
+                          _timeFrom.clear();
+                          _timeTo.clear();
+                        }
+                      },
+                    ),
+                  ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.only(bottom: 10.0,start: 10.0,end: 10.0),
-                child: TextFormField(
-                  controller: _timeTo,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'To',
-                  ),
-                ),
-              ),
-              TextButton(
-                child: const Text('Ok'),
-                onPressed: () {
-                  _dateServices.addVolunteerToMagasin(widget.date, widget.magasin, name,_timeFrom.text.trim(),_timeTo.text.trim());
-                  Navigator.pop(context);
-                },
               ),
             ],
           ),
